@@ -6,7 +6,7 @@ import com.tommannson.apps.homework.utils.isEmail
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
 
-fun EditText.textSizeValidationObservable(): Observable<CharSequence> {
+fun EditText.textContentObservable(): Observable<CharSequence> {
     return Observable.create<CharSequence> {
 
         val watcher = object : SimpleTextWatcher() {
@@ -18,8 +18,30 @@ fun EditText.textSizeValidationObservable(): Observable<CharSequence> {
         if (!it.isDisposed) {
             this.addTextChangedListener(watcher)
             it.setDisposable(Disposables.fromAction({
-                this@textSizeValidationObservable.removeTextChangedListener(watcher)
+                this@textContentObservable.removeTextChangedListener(watcher)
             }))
         }
     }
 }
+
+fun EditText.emailValiationObservable(): Observable<Boolean> {
+    return Observable.create<Boolean> {
+
+        val watcher = object : SimpleTextWatcher() {
+
+            override fun textChanged(s: CharSequence) {
+                it.onNext(s.isEmail())
+            }
+        }
+
+        if (!it.isDisposed) {
+            this.addTextChangedListener(watcher)
+
+            it.setDisposable(Disposables.fromAction({
+                this@emailValiationObservable.removeTextChangedListener(watcher)
+            }))
+        }
+    }
+}
+
+

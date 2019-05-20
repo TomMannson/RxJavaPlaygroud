@@ -41,8 +41,7 @@ class Bank {
      */
     fun getObservableAccountForProfileUUID(profileUuid: UUID): Observable<Account> {
         return getObservableForProfileUUID(profileUuid)
-            .flatMap {
-                val accountUUID = it
+            .flatMap { accountUUID ->
                 Observable.fromIterable(listOfAccounts)
                     .filter { it.uuid == accountUUID }
             }
